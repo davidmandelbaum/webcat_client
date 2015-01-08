@@ -39,16 +39,24 @@ request.post server, (err, res, body) ->
     process.stdin.resume()
 
     setTimeout(->
-      socket.emit 'data', savedStdin
+      socket.emit 'data', processData savedStdin
     , 1000)
 
     process.stdin.on 'data', (data) ->
       if data
-        data = converter.toHtml data
-        data = data
+        data = processData data
       socket.emit 'data', data
 
     process.on 'SIGINT', ->
       console.log '\nexiting...'
       socket.emit 'exit', ''
       process.exit 2
+
+processData = (data) ->
+  data = data
+        .split " "
+        .join "&nbsp;"
+        .split "\n"
+        .join "<br />"
+  data = converter.toHtml(data)
+  data
