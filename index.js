@@ -29,15 +29,18 @@
   server = program.local ? 'http://localhost:3000/' : 'http://webcatio.herokuapp.com:80/';
 
   request.post(server, function(err, res, body) {
-    var id, socket, target;
+    var id, socket, target, targetForOutput;
     id = body;
     target = server + id;
+    targetForOutput = target.replace(":80", "");
     clipboard.copy(target);
     socket = io.connect(target);
     open(target);
     return socket.on('connect', function() {
       process.stdin.setEncoding('utf8');
-      process.stdin.resume();
+      console.log("STREAM " + id);
+      console.log("To view stream, visit " + targetForOutput);
+      console.log("This link is also copied to the clipboard");
       setTimeout(function() {
         return socket.emit('data', processData(savedStdin));
       }, 1000);

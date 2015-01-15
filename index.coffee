@@ -27,6 +27,7 @@ request.post server, (err, res, body) ->
 
   id = body
   target = server + id
+  targetForOutput = target.replace ":80", ""
   # console.log 'target = ' + target
 
   clipboard.copy(target)
@@ -36,7 +37,11 @@ request.post server, (err, res, body) ->
     # console.log 'connected to socket'
 
     process.stdin.setEncoding 'utf8'
-    process.stdin.resume()
+    # process.stdin.resume()
+    
+    console.log "STREAM " + id
+    console.log "To view stream, visit " + targetForOutput
+    console.log "This link is also copied to the clipboard"
 
     setTimeout(->
       socket.emit 'data', processData savedStdin
